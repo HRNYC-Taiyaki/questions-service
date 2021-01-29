@@ -1,13 +1,10 @@
 const router = require('express').Router();
-//todo: import controllers
+const answerController = require('../controllers/answerController.js');
 
-
-router.get('/', movieController.getFavorites);
-router.get('/search', movieController.getSearch);
-router.get('/genres', movieController.getGenres);
-router.post('/save', movieController.saveMovie);
-router.delete('/delete/:id', movieController.deleteMovie);
-
+router.get('/', answerController.getAnswers);
+router.post('/', answerController.addAnswer);
+router.put('/helpful', answerController.markAnswerHelpful);
+router.put('/report', answerController.reportAnswer);
 
 
 module.exports = router;
