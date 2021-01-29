@@ -1,6 +1,5 @@
 const express = require('express');
 const router = require('./routes');
-const db = require('./db/mongo.js');
 
 const app = express();
 
