@@ -24,8 +24,8 @@ const answerSchema = new Schema({
 const Answer = mongoose.model('Answer', answerSchema);
 
 module.exports = {
-  find: () => {},
-  addNew: () => {},
-  markHelpful: () => {},
-  report: () => {},
+  find: (questionId, page, count) => {},
+  addNew: (answer) => {},
+  markHelpful: (answerId) => {},
+  report: (answerId) => {},
 };
