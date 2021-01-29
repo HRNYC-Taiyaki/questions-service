@@ -3,9 +3,7 @@ const questionController = require('../controllers/questionController.js');
 //todo: import controllers
 
 
-router.get('/', /* Add controller */);
-
-
+router.get('/', questionController.getProductQuestions);
 
 
 module.exports = router;
