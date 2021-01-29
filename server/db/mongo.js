@@ -6,7 +6,7 @@ mongoose.connect(CONNECTIONSTRING, {useNewUrlParser: true, useUnifiedTopology: t
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log('Connected to mongoDB')
+  console.log('Connected to mongoDB');
 });
 
 module.exports = db;
