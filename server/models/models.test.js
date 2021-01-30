@@ -1,6 +1,7 @@
 const { afterAll, expect } = require('@jest/globals');
 const mongoose = require('mongoose');
 const answerSchema = require('./answerModel');
+const questionSchema = require('./questionModel');
 
 const dbName = 'sdcTest';
 
@@ -119,6 +120,7 @@ const dummyAnswers = [
 ];
 
 const Answer = mongoose.model('Answer', answerSchema);
+const Question = mongoose.model('Question', answerSchema);
 
 beforeAll(async () => {
   const url = `mongodb://127.0.0.1/${dbName}`;
@@ -229,3 +231,54 @@ describe('Answer model', () => {
 
 });
 
+const dummyQuestions = [];
+
+describe('Question model', () => {
+  beforeEach(async () => {
+    let bulkWrite = [];
+    for (let doc of dummyQuestions) {
+      bulkWrite.push(
+        {insertOne: {
+          document: doc,
+        }}
+      );
+    }
+
+    let res = await Question.bulkWrite(bulkWrite);
+  });
+
+  afterEach(async () => {
+    // Remove all documents from collection
+    await Question.deleteMany();
+  });
+
+  test('should add a question', async () => {
+
+  });
+
+  test('should return questions based on page and count', async () => {
+
+  });
+
+  test('should return questions sorted by helpfulness', async () => {
+
+  });
+
+  test('should sorted results should be static', async () => {
+
+  });
+
+  test('should add a question helpful', async () => {
+
+  });
+
+  test('should report a question', async () => {
+
+  });
+
+  test('should not return questions that were reported', async () => {
+
+  });
+
+
+});
