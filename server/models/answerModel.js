@@ -10,6 +10,11 @@ const photoLimit = (photos) => {
   photos.length <= 5;
 };
 
+const boolVal = (val) => {
+  return val === 0 || val === 1;
+};
+
+//todo: Add validation for reported to make sure it is only 1 or 0
 const answerSchema = new Schema({
   'id': { type: Number, required: true, unique: true },
   'question_id': { type: Number, required: true },
@@ -17,13 +22,13 @@ const answerSchema = new Schema({
   'helpful': { type: Number, default: 0 },
   'product_id': { type: Number, index: true },
   'photos': {
-    'type': [photoSchema],
-    'validate': [photoLimit, 'photos exceeds the limit of 5'],
+    type: [photoSchema],
+    validate: [photoLimit, 'photos exceeds the limit of 5'],
   },
   'name': { type: String, required: true },
   'email': String,
   'created_at': { type: Date, required: true },
-  'reported': { type: Boolean, default: false },
+  'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
 });
 
 // Return a promise that resolves to an array
@@ -67,10 +72,23 @@ answerSchema.statics.findByQuestionId = function (
   return this.aggregate(pipeline);
 };
 
-answerSchema.statics.addNew = function (answer) {};
+answerSchema.statics.markHelpful = function (answerId) {
+  return this.findOneAndUpdate(
+    {id: answerId},
+    {'$inc': {helpful: 1}},
+    {new: true}
+  )
+    .exec();
+};
 
-answerSchema.statics.markHelpful = function (answerId) {};
-
-answerSchema.statics.report = function (answerId) {};
+answerSchema.statics.report = function (answerId) {
+  return this.findOneAndUpdate(
+    {id: answerId},
+    {$bit: {
+      reported: {'xor': 1}
+    }},
+    {new: true}
+  ).exec();
+};
 
 module.exports = answerSchema;

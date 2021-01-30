@@ -19,7 +19,7 @@ const dummyAnswers = [
     'name': 'Georgette.Glover7',
     'email': 'Cortez_Huel@hotmail.com',
     'created_at': '2019-02-07T00:00:00Z',
-    'reported': false
+    'reported': 0
   },
   {
     'id': 198455,
@@ -31,7 +31,7 @@ const dummyAnswers = [
     'name': 'Lewis_Cronin',
     'email': 'Reid.Lowe@yahoo.com',
     'created_at': '2018-09-30T00:00:00Z',
-    'reported': false
+    'reported': 0
   },
   {
     '_id': '60108218fccf1cfd0e514d68',
@@ -44,7 +44,7 @@ const dummyAnswers = [
     'name': 'Rick.Runte',
     'email': 'Lyla.Harber@gmail.com',
     'created_at': '2018-12-28T00:00:00Z',
-    'reported': false
+    'reported': 0
   }
 ];
 
@@ -92,7 +92,7 @@ describe('Answer model', () => {
       'name': 'Lewis_Cronin',
       'email': 'Reid.Lowe@yahoo.com',
       'created_at': '2018-09-30T00:00:00Z',
-      'reported': false
+      'reported': 0
     });
     await answer.save();
     let count = await Answer.estimatedDocumentCount();
@@ -124,7 +124,7 @@ describe('Answer model', () => {
   test('should set report flag to true', async () => {
     await Answer.report(198454);
     let updated = await Answer.findOne({id: 198454}).exec();
-    expect(updated.report).toBe(true);
+    expect(updated.reported).toBe(1);
   });
 
 });
