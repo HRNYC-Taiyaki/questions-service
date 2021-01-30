@@ -1,5 +1,4 @@
 const app = require('./server.js');
-// const db = require('./db/mongo.js');
 
 const SERVER_PORT = process.env.SERVER_PORT || 3000;
 

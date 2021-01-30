@@ -103,6 +103,7 @@ describe('Answer model', () => {
   });
 
   test('should fetch answers', async () => {
+    //todo: Could be a more meaningful test - test sort order
     let fetch1 = await Answer.findByQuestionId(56464);
     let fetch2 = await Answer.findByQuestionId(56464, 1, 2);
     let fetch3 = await Answer.findByQuestionId(56464, 2, 2);
