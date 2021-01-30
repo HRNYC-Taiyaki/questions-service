@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const { Schema } = mongoose;
-// const db = require('../db/mongo.js');
 
 const photoSchema = new Schema({
   url: { type: String, required: true },
@@ -16,8 +16,7 @@ const boolVal = (val) => {
 
 //todo: Add validation for reported to make sure it is only 1 or 0
 const answerSchema = new Schema({
-  'id': { type: Number, required: true, unique: true },
-  'question_id': { type: Number, required: true },
+  'question_id': { type: mongoose.ObjectId, required: true, index: true },
   'body': { type: String, required: true },
   'helpful': { type: Number, default: 0 },
   'product_id': { type: Number, index: true },
@@ -27,7 +26,7 @@ const answerSchema = new Schema({
   },
   'name': { type: String, required: true },
   'email': String,
-  'created_at': { type: Date, required: true },
+  'created_at': { type: Date, default: Date.now, },
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
 });
 
@@ -40,7 +39,7 @@ answerSchema.statics.findByQuestionId = function (
   let pipeline = [
     {
       $match: {
-        'question_id': questionId,
+        'question_id': ObjectId(questionId),
         reported: 0,
       },
     },
@@ -75,7 +74,7 @@ answerSchema.statics.findByQuestionId = function (
 
 answerSchema.statics.markHelpful = function (answerId) {
   return this.findOneAndUpdate(
-    {id: answerId},
+    {_id: ObjectId(answerId)},
     {'$inc': {helpful: 1}},
     {new: true}
   )
@@ -84,7 +83,7 @@ answerSchema.statics.markHelpful = function (answerId) {
 
 answerSchema.statics.report = function (answerId) {
   return this.findOneAndUpdate(
-    {id: answerId},
+    {_id: ObjectId(answerId)},
     {$bit: {
       reported: {'xor': 1}
     }},

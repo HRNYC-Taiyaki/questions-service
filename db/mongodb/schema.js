@@ -3,15 +3,14 @@ db.createCollection('question', {
     $jsonSchema: {
       bsonType: 'object',
       required: [
-        'id',
         'product_id',
         'name',
-        'body'
+        'body',
+        'created_date',
+        'helpful',
+        'reported',
       ],
       properties: {
-        id: {
-          bsonType: 'int'
-        },
         product_id: {
           bsonType: 'int',
           description: 'Required. Number to reference associated product'
@@ -50,18 +49,23 @@ db.createCollection('answer', {
   validator: {
     $jsonSchema: {
       bsonType: 'object',
-      required: ['id', 'product_id', 'question_id', 'body', 'name'],
+      required: [
+        'product_id',
+        'question_id',
+        'body',
+        'name',
+        'helpful',
+        'reported',
+        'created_date'
+      ],
       properties: {
-        id: {
-          bsonType: 'int',
-        },
         product_id: {
           bsonType: 'int',
           description: 'Required. Number to reference associated product'
         },
         question_id: {
-          bsonType: 'int',
-          description: 'Required. Number to reference associated question'
+          bsonType: 'objectId',
+          description: 'Required. ID to reference associated question'
         },
         created_date: {
           bsonType: 'date',
@@ -88,16 +92,17 @@ db.createCollection('answer', {
           description: 'Flag if a user has reported the answer'
         },
         photos: {
-          bsonType: ['array'],
+          bsonType: [
+            'array'
+          ],
           minItems: 0,
           maxItems: 5,
           items: {
             bsonType: 'object',
-            required: ['id', 'url'],
+            required: [
+              'url'
+            ],
             properties: {
-              id: {
-                bsonType: 'int',
-              },
               url: {
                 bsonType: 'string',
                 description: 'url to user image'
