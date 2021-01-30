@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const db = require('../db/mongo.js');
+// const db = require('../db/mongo.js');
 
 const photoSchema = new Schema({
   'url': {type: String, required: true},
@@ -21,11 +21,20 @@ const answerSchema = new Schema({
   'reported': {type: Boolean, default: false},
 });
 
-const Answer = mongoose.model('Answer', answerSchema);
-
-module.exports = {
-  find: (questionId, page, count) => {},
-  addNew: (answer) => {},
-  markHelpful: (answerId) => {},
-  report: (answerId) => {},
+answerSchema.static.findByQuestionId = function (questionId, page, count) {
 };
+
+answerSchema.static.addNew = function (answer) {
+};
+
+answerSchema.static.markHelpful = function (answerId) {
+};
+
+answerSchema.static.report = function (answerId) {
+};
+
+// const Answer = mongoose.model('Answer', answerSchema);
+
+
+// module.exports = Answer;
+module.exports = answerSchema;
