@@ -41,6 +41,7 @@ answerSchema.statics.findByQuestionId = function (
     {
       $match: {
         'question_id': questionId,
+        reported: 0,
       },
     },
     {
