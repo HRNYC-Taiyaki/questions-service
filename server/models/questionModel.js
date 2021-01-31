@@ -18,7 +18,28 @@ const questionSchema = new Schema({
 
 // todo: Add custom statics methods for schema
 questionSchema.statics.findByProductId = function (productId, page = 1, count = 5) {
-
+  let pipeline = [
+    {
+      $match: {
+        'product_id': productId,
+        reported: 0,
+      },
+    },
+    {
+      $sort: {
+        helpful: -1,
+        'created_at': -1,
+        _id: -1,
+      },
+    },
+    {
+      $skip: (page - 1) * count,
+    },
+    {
+      $limit: count,
+    },
+  ];
+  return this.aggregate(pipeline);
 };
 
 questionSchema.statics.markHelpful = function (questionId) {

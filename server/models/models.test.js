@@ -198,7 +198,7 @@ describe('Answer model', () => {
     let fetch1 = await Answer.findByQuestionId(questionId);
     let fetch2 = await Answer.findByQuestionId(questionId, 1, 3);
     let fetch3 = await Answer.findByQuestionId(questionId, 2, 3);
-    debugger;
+
     expect(fetch2[0]._id.toString()).toBe(fetch1[0]._id.toString());
     expect(fetch3[0]._id.toString()).toBe(fetch1[3]._id.toString());
   });
@@ -244,7 +244,7 @@ const dummyQuestions = [
     'product_id': 16087,
     'body': 'Et et rerum omnis impedit ipsam perferendis facere sed commodi.',
     'helpful': 17,
-    'reported': 1,
+    'reported': 0,
     'name': 'Jaydon.Keebler',
     'email': 'Raleigh_McClure@gmail.com',
     'created_at': '2019-04-29T00:00:00Z',
@@ -348,6 +348,7 @@ describe('Question model', () => {
     let fetch2 = await Question.findByProductId(productId, 1, 3);
     let fetch3 = await Question.findByProductId(productId, 2, 4);
     let fetch4 = await Question.findByProductId(productId, 5, 4);
+    debugger;
 
     expect(fetch1.length).toBe(5);
     expect(fetch2.length).toBe(3);
