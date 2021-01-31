@@ -173,10 +173,13 @@ describe('Answer model', () => {
   });
 
   test('should fetch answers based on page and count', async () => {
-    let fetch1 = await Answer.findByQuestionId('601087e1d492e8580b3b9035');
-    let fetch2 = await Answer.findByQuestionId('601087e1d492e8580b3b9035', 1, 3);
-    let fetch3 = await Answer.findByQuestionId('601087e1d492e8580b3b9035', 3, 3);
-    let fetch4 = await Answer.findByQuestionId('601087e1d492e8580b3b9035', 5, 3);
+    let questionId = '601087e1d492e8580b3b9035';
+
+    let fetch1 = await Answer.findByQuestionId(questionId);
+    let fetch2 = await Answer.findByQuestionId(questionId, 1, 3);
+    let fetch3 = await Answer.findByQuestionId(questionId, 3, 3);
+    let fetch4 = await Answer.findByQuestionId(questionId, 5, 3);
+
     expect(fetch1.length).toBe(5);
     expect(fetch2.length).toBe(3);
     expect(fetch3.length).toBe(2);
@@ -190,7 +193,7 @@ describe('Answer model', () => {
     expect(results[2].created_at > results[3].created_at).toBe(true);
   });
 
-  test('sorting should be static', async () => {
+  test('should statically sort results', async () => {
     let questionId = '601087e1d492e8580b3b9035';
     let fetch1 = await Answer.findByQuestionId(questionId);
     let fetch2 = await Answer.findByQuestionId(questionId, 1, 3);
@@ -228,7 +231,6 @@ describe('Answer model', () => {
 const dummyQuestions = [
   {
     '_id': '601087e2d492e8580b3c618e',
-    'id': 56462,
     'product_id': 16087,
     'body': 'Aliquid et repellendus accusamus labore dignissimos.',
     'helpful': 5,
@@ -239,7 +241,6 @@ const dummyQuestions = [
   },
   {
     '_id': '601087e2d492e8580b3c618f',
-    'id': 56463,
     'product_id': 16087,
     'body': 'Et et rerum omnis impedit ipsam perferendis facere sed commodi.',
     'helpful': 17,
@@ -250,7 +251,6 @@ const dummyQuestions = [
   },
   {
     '_id': '601087e2d492e8580b3c6190',
-    'id': 56464,
     'product_id': 16087,
     'body': 'Numquam ducimus enim cumque voluptas officiis rerum repudiandae recusandae doloremque.',
     'helpful': 23,
@@ -258,7 +258,37 @@ const dummyQuestions = [
     'name': 'Kennith.Medhurst',
     'email': 'Eldred.Hills@hotmail.com',
     'created_at': '2019-07-19T00:00:00Z',
-  }
+  },
+  {
+    '_id': '601087e2d492e8580b3c6191',
+    'product_id': 16087,
+    'body': 'Numquam ducimus enim cumque voluptas officiis rerum repudiandae recusandae doloremque.',
+    'helpful': 15,
+    'reported': 0,
+    'name': 'Test4',
+    'email': 'Eldred.Hills@hotmail.com',
+    'created_at': '2020-07-19T00:00:00Z',
+  },
+  {
+    '_id': '601087e2d492e8580b3c6192',
+    'product_id': 16087,
+    'body': 'Numquam ducimus enim cumque voluptas officiis rerum repudiandae recusandae doloremque.',
+    'helpful': 2,
+    'reported': 0,
+    'name': 'Test5',
+    'email': 'Eldred.Hills@hotmail.com',
+    'created_at': '2019-06-19T00:00:00Z',
+  },
+  {
+    '_id': '601087e2d492e8580b3c6193',
+    'product_id': 16087,
+    'body': 'Numquam ducimus enim cumque voluptas officiis rerum repudiandae recusandae doloremque.',
+    'helpful': 2,
+    'reported': 0,
+    'name': 'Test6',
+    'email': 'Eldred.Hills@hotmail.com',
+    'created_at': '2019-07-19T00:00:00Z',
+  },
 ];
 
 describe('Question model', () => {
@@ -292,36 +322,88 @@ describe('Question model', () => {
   });
 
   test('should add a question', async () => {
-    let question = {
+    let question = new Question({
       'product_id': 16087,
       'body': 'Numquam ducimus enim cumque voluptas officiis rerum repudiandae recusandae doloremque.',
-      'name': 'Kennith.Medhurst',
+      'name': 'Test1234',
       'email': 'Eldred.Hills@hotmail.com',
-    };
+    });
+
+    await question.save();
+    let count = await Question.estimatedDocumentCount();
+    let result = await Question.findOne({name: 'Test1234'});
+
+    expect(count).toBe(7);
+    expect(result._id.toString().length).toBe(24);
+    expect(result.helpful).toBe(0);
+    expect(result.reported).toBe(0);
+    expect(result.created_at instanceof Date).toBe(true);
+
   });
 
   test('should return questions based on page and count', async () => {
+    let productId = 16087;
 
+    let fetch1 = await Question.findByProductId(productId);
+    let fetch2 = await Question.findByProductId(productId, 1, 3);
+    let fetch3 = await Question.findByProductId(productId, 2, 4);
+    let fetch4 = await Question.findByProductId(productId, 5, 4);
+
+    expect(fetch1.length).toBe(5);
+    expect(fetch2.length).toBe(3);
+    expect(fetch3.length).toBe(2);
+    expect(fetch4.length).toBe(0);
   });
 
   test('should return questions sorted by helpfulness', async () => {
+    let results = await Question.findByProductId(16087);
+
+    for (let i = 0; i < results.length; i++) {
+      let current = results[i];
+      let next = results[i + 1];
+      if (next) {
+        expect(current.helpful >= next.helpful).toBe(true);
+        if (current.helpful === next.helpful) {
+          expect(current.created_at >= next.created_at).toBe(true);
+        }
+      }
+    }
 
   });
 
-  test('should sorted results should be static', async () => {
+  test('should statically sort results', async () => {
+    let productId = 16087;
+
+    let fetch1 = await Question.findByProductId(productId, 1, 10);
+    let fetch2 = await Question.findByProductId(productId, 1, 2);
+    let fetch3 = await Question.findByProductId(productId, 2, 2);
+    let fetch4 = await Question.findByProductId(productId, 3, 2);
+
+    expect(fetch1).toEqual([...fetch2, ...fetch3, ...fetch4]);
 
   });
 
-  test('should add a question helpful', async () => {
-
+  test('should increase helpful count by 1', async () => {
+    let questionId = '601087e2d492e8580b3c618e';
+    let original = await Question.findOne({_id: ObjectId(questionId)}).exec();
+    await Question.markHelpful(questionId);
+    let updated = await Question.findOne({_id: ObjectId(questionId)}).exec();
+    expect(original.helpful + 1 === updated.helpful).toBe(true);
   });
 
   test('should report a question', async () => {
-
+    let questionId = '601087e2d492e8580b3c618e';
+    await Question.report(questionId);
+    let updated = await Question.findOne({_id: ObjectId(questionId)}).exec();
+    expect(updated.reported).toBe(1);
   });
 
   test('should not return questions that were reported', async () => {
-
+    let questionId = '601087e2d492e8580b3c618e';
+    let original = await Question.findByProductId(16087, 1, 10);
+    await Question.report(questionId);
+    let updated = await Question.findByProductId(16087, 1, 10);
+    expect(original.length === updated.length + 1).toBe(true);
   });
 
 
