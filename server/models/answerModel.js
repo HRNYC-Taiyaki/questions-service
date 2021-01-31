@@ -54,6 +54,7 @@ answerSchema.statics.findByQuestionId = function (
         seller: -1,
         helpful: -1,
         'created_at': -1,
+        _id: -1,
       },
     },
     {

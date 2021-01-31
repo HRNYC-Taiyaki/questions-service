@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const { Schema } = mongoose;
 
 const boolVal = (val) => {
@@ -20,9 +21,24 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
 
 };
 
-questionSchema.statics.markHelpful = function (questionId) {};
+questionSchema.statics.markHelpful = function (questionId) {
+  return this.findOneAndUpdate(
+    {_id: ObjectId(questionId)},
+    {'$inc': {helpful: 1}},
+    {new: true}
+  )
+    .exec();
+};
 
-questionSchema.statics.report = function (questionId) {};
+questionSchema.statics.report = function (questionId) {
+  return this.findOneAndUpdate(
+    {_id: ObjectId(questionId)},
+    {$bit: {
+      reported: {'xor': 1}
+    }},
+    {new: true}
+  ).exec();
+};
 
 
 module.exports = questionSchema;
