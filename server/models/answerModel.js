@@ -14,7 +14,6 @@ const boolVal = (val) => {
   return val === 0 || val === 1;
 };
 
-//todo: Add validation for reported to make sure it is only 1 or 0
 const answerSchema = new Schema({
   'question_id': { type: mongoose.ObjectId, required: true, index: true },
   'body': { type: String, required: true },
@@ -25,7 +24,7 @@ const answerSchema = new Schema({
     validate: [photoLimit, 'photos exceeds the limit of 5'],
   },
   'name': { type: String, required: true },
-  'email': String,
+  'email': { type: String, required: true },
   'created_at': { type: Date, default: Date.now, },
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
 });
