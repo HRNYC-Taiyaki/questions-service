@@ -291,10 +291,61 @@ const dummyQuestions = [
   },
 ];
 
+const dummyQAnswers = [
+  {
+    '_id': '60108214fccf1cfd0e4e6da7',
+    'question_id': '601087e2d492e8580b3c6190',
+    'body': 'Qui voluptas id consequatur necessitatibus id voluptate sit.',
+    'helpful': 19,
+    'product_id': 818,
+    'photos': [ ],
+    'name': 'Maximilian_Gerlach44',
+    'email': 'Manley64@yahoo.com',
+    'created_at': '2019-05-23T00:00:00Z',
+    'reported': 0
+  },
+  {
+    '_id': '60108214fccf1cfd0e4e6da5',
+    'question_id': '601087e2d492e8580b3c6190',
+    'body': 'Delectus hic aut et sint.',
+    'helpful': 17,
+    'product_id': 818,
+    'photos': [ ],
+    'name': 'Frederick_Boehm87',
+    'email': 'Napoleon.Kovacek28@gmail.com',
+    'created_at': '2019-03-14T00:00:00Z',
+    'reported': 0
+  },
+  {
+    '_id': '60108214fccf1cfd0e4e6da6',
+    'question_id': '601087e2d492e8580b3c6190',
+    'body': 'Aliquid est repellat at hic.',
+    'helpful': 17,
+    'product_id': 818,
+    'photos': [ ],
+    'name': 'Litzy_Erdman68',
+    'email': 'Dayton97@yahoo.com',
+    'created_at': '2019-01-12T00:00:00Z',
+    'reported': 0
+  },
+  {
+    '_id': '60108214fccf1cfd0e4e6da2',
+    'question_id': '601087e2d492e8580b3c618f',
+    'body': 'Et et excepturi mollitia nihil sapiente repellat voluptas dolor.',
+    'helpful': 14,
+    'product_id': 818,
+    'photos': [ ],
+    'name': 'Antonette72',
+    'email': 'Nina_Vandervort@yahoo.com',
+    'created_at': '2018-12-30T00:00:00Z',
+    'reported': 0
+  },
+];
+
 describe('Question model', () => {
   beforeEach(async () => {
     let bulkWrite = [];
-    for (let doc of dummyAnswers) {
+    for (let doc of dummyQAnswers) {
       bulkWrite.push(
         {insertOne: {
           document: doc,
@@ -348,7 +399,6 @@ describe('Question model', () => {
     let fetch2 = await Question.findByProductId(productId, 1, 3);
     let fetch3 = await Question.findByProductId(productId, 2, 4);
     let fetch4 = await Question.findByProductId(productId, 5, 4);
-    debugger;
 
     expect(fetch1.length).toBe(5);
     expect(fetch2.length).toBe(3);
@@ -383,6 +433,16 @@ describe('Question model', () => {
     expect(fetch1).toEqual([...fetch2, ...fetch3, ...fetch4]);
 
   });
+
+  test('should return questions with answers embedded.', async () => {
+    let productId = 16087;
+    let fetch = await Question.findByProductId(productId, 1, 10);
+
+    expect(Object.keys(fetch[0].answers).length).toBe(3);
+    expect(Object.keys(fetch[1].answers).length).toBe(1);
+    expect(Object.keys(fetch[2].answers).length).toBe(0);
+  });
+
 
   test('should increase helpful count by 1', async () => {
     let questionId = '601087e2d492e8580b3c618e';

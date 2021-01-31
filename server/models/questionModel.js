@@ -26,6 +26,78 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
       },
     },
     {
+      $lookup: {
+        from: 'answers',
+        as: 'answers',
+        let: {
+          id: '$_id'
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  '$question_id',
+                  '$$id'
+                ]
+              }
+            }
+          },
+          {
+            $set: {
+              seller: {
+                $eq: [
+                  '$email',
+                  'Seller'
+                ]
+              }
+            }
+          },
+          {
+            $sort: {
+              seller: -1,
+              helpful: -1,
+              'created_at': -1,
+              _id: -1
+            }
+          },
+          {
+            $project: {
+              seller: 0
+            }
+          }
+        ],
+
+      }
+    },
+    {
+      $set: {
+        'answers': {
+          $reduce: {
+            input: '$answers',
+            initialValue: {},
+            in: {
+              $mergeObjects: [
+                '$$value',
+                {
+                  $arrayToObject: [
+                    [
+                      {
+                        k: {
+                          $toString: '$$this._id'
+                        },
+                        v: '$$this'
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
       $sort: {
         helpful: -1,
         'created_at': -1,
