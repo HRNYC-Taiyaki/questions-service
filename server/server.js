@@ -5,8 +5,14 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/qa/questions/:question_id/answers', router.answers);
+const passParams = function (req, res, next) {
+  debugger;
+  req.param = req.params;
+  next();
+};
+
+app.use('/qa/questions/:question_id/answers', /* passParams, */ router.answers);
 app.use('/qa/questions', router.questions);
-app.use('/qa/answers/:answer_id', router.answers);
+app.use('/qa/answers', router.answers);
 
 module.exports = app;
