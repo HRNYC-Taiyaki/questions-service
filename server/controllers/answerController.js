@@ -1,24 +1,51 @@
-const { Answer } = require('../db/mongo.js');
+const { Answer, Question } = require('../db/mongo.js');
 const { validationResult } = require('express-validator');
 
 module.exports = {
   getAnswers: (req, res) => {
     // Responds with error if any of the route validations fail
     const errors = validationResult(req);
-    debugger;
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    res.status(200).send('Question Answers');
+
+    Answer.findByQuestionId(req.params.question_id, req.query.page, req.query.count)
+      .then(result => {
+        res.status(200).json(result);
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(422).send(err.message);
+      });
+
   },
-  addAnswer: (req, res) => {
+  addAnswer: async (req, res) => {
     // Responds with error if any of the route validations fail
     const errors = validationResult(req);
-    debugger;
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    res.status(201).send('Answer Added');
+
+    // Build the answer object
+    let { question_id } = req.params;
+    let {body, name, email, photos } = req.body;
+
+    // todo: Can we get the product_id from question in to answer with one query?
+    let question = await Question.findById(question_id);
+    let { product_id } = question;
+
+    // Save answer
+    let answer = new Answer(
+      { body, name, email, question_id, photos, product_id}
+    );
+    answer.save()
+      .then(result => {
+        res.sendStatus(201);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
+
   },
   markAnswerHelpful: (req, res) => {
     // Responds with error if any of the route validations fail
