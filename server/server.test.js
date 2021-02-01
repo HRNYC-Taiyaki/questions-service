@@ -7,7 +7,6 @@ const question_id = '6010882bd492e8580b71415e';
 describe('Server', () => {
   it('should have route to get questions', async () => {
     let response = await request.get(`/qa/questions?product_id=${product_id}`);
-    debugger;
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(5);
     for (question of response.body) {
@@ -17,7 +16,6 @@ describe('Server', () => {
 
   it('should have route to get answers', async () => {
     let response = await request.get(`/qa/questions/${question_id}/answers`);
-    debugger;
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(5);
     for (answer of response.body) {
