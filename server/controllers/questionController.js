@@ -25,8 +25,20 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
+    // Build the question object
+    let {body, name, email, product_id } = req.body;
+    // save question object
+    let question = new Question(
+      { body, name, email, product_id}
+    );
+    question.save()
+      .then(result => {
+        res.sendStatus(201);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
 
-    res.status(201).send('Question Added');
   },
   markQuestionHelpful: (req, res) => {
     // Responds with error if any of the route validations fail
