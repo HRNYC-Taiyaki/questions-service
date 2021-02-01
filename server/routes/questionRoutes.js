@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const questionController = require('../controllers/questionController.js');
-const { query } = require('express-validator');
+const { query, body, param } = require('express-validator');
+
+const validateQuestionId = [
+  param('question_id').exists().isLength({min: 24, max: 24})
+];
 
 router.get('/', [
   query('product_id').exists().isNumeric().toInt(),
@@ -9,14 +13,16 @@ router.get('/', [
 ],
 questionController.getQuestions);
 
-// body should exist
-// name should exist
-// standardize e-mail
-// product_id should exist convert to number
-router.post('/', questionController.addQuestion);
+router.post('/', [
+  body('product_id').exists().isNumeric().toInt(),
+  body('body').isLength({min: 3, max: 1000}).trim().escape(),
+  body('name').isLength({min: 1, max: 60}).trim().escape(),
+  body('email').isEmail().normalizeEmail(),
+],
+questionController.addQuestion);
 
 // question_id should exist and convert to string
-router.put('/:question_id/helpful', questionController.markQuestionHelpful);
-router.put('/:question_id/report', questionController.reportQuestion);
+router.put('/:question_id/helpful', validateQuestionId, questionController.markQuestionHelpful);
+router.put('/:question_id/report', validateQuestionId, questionController.reportQuestion);
 
 module.exports = router;
