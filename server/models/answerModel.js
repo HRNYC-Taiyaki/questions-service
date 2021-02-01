@@ -53,7 +53,7 @@ answerSchema.statics.findByQuestionId = function (
       $sort: {
         seller: -1,
         helpful: -1,
-        'created_at': -1,
+        'created_date': -1,
         _id: -1,
       },
     },

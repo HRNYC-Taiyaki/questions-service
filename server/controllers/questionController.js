@@ -6,10 +6,12 @@ module.exports = {
     if (!productId) {
       res.status(422).send('Error: invalid product_id provided');
     } else {
-      // Question.findByProductId(productId/* , req.query.page, req.query.count */)
-      Question.find({'product_id': 2})
+      // todo: Would like to convert these to numbers using middleware
+      productId = parseInt(productId);
+      let page = req.query.page ? parseInt(req.query.page) : undefined;
+      let count = req.query.count ? parseInt(req.query.count) : undefined;
+      Question.findByProductId(productId, page, count)
         .then(result => {
-          console.log(result);
           res.status(200).json(result);
         })
         .catch(err => {

@@ -57,7 +57,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
             $sort: {
               seller: -1,
               helpful: -1,
-              'created_at': -1,
+              'created_date': -1,
               _id: -1
             }
           },
@@ -67,7 +67,6 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
             }
           }
         ],
-
       }
     },
     {
@@ -100,7 +99,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
     {
       $sort: {
         helpful: -1,
-        'created_at': -1,
+        'created_date': -1,
         _id: -1,
       },
     },
