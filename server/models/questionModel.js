@@ -125,9 +125,7 @@ questionSchema.statics.markHelpful = function (questionId) {
 questionSchema.statics.report = function (questionId) {
   return this.findOneAndUpdate(
     {_id: ObjectId(questionId)},
-    {$bit: {
-      reported: {'xor': 1}
-    }},
+    { reported: 1},
     {new: true}
   ).exec();
 };
