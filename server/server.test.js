@@ -1,22 +1,29 @@
 const app = require('./server.js');
 const request = require('supertest')(app);
 
+const product_id = 2;
+const question_id = '6010882bd492e8580b71415e';
+
 describe('Server', () => {
-  it('should have route to get questions', async (done) => {
-    let response = await request.get('/qa/questions?product_id=11975');
+  it('should have route to get questions', async () => {
+    let response = await request.get(`/qa/questions?product_id=${product_id}`);
+    debugger;
     expect(response.status).toBe(200);
-    // exppect(response.body['product_id']).toBe('11975');
-    // expect(response.body.results.length).toBe(5);
-    done();
+    expect(response.body.length).toBe(5);
+    for (question of response.body) {
+      expect(question).toHaveProperty('product_id', product_id);
+    }
   });
 
-  it('should have route to get answers', async (done) => {
-    let response = await request.get('/qa/questions/56462/answers');
+  it('should have route to get answers', async () => {
+    let response = await request.get(`/qa/questions/${question_id}/answers`);
+    debugger;
     expect(response.status).toBe(200);
-    // expect(response.body.length).toBe(5);
-    // expect(response.body[0].campus).toEqual(expect.stringMatching('hrnyc'));
-    // expect(response.body[0].hasOwnProperty('id')).toBe(true);
-    done();
+    expect(response.body.length).toBe(5);
+    for (answer of response.body) {
+      expect(answer).toHaveProperty('question_id', question_id);
+    }
+
   });
 
   it('should have route to post questions', async (done) => {
