@@ -11,13 +11,13 @@ services:
       - SERVER_PORT=3000
       - CONNECTIONSTRING=mongodb://mongo:27017/questions
     volumes:
-      - ./:/code
+      - .:/code
     command: npm run debug
 
   mongo:
     image: mongo:4.2.8
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - mongodb:/data/db
       - mongodb_config:/data/configdb

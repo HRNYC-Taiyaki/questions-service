@@ -17,7 +17,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Maximilian_Gerlach44',
     'email': 'Manley64@yahoo.com',
-    'created_at': '2019-05-23T00:00:00Z',
+    'created_date': '2019-05-23T00:00:00Z',
     'reported': 0
   },
   {
@@ -29,7 +29,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Frederick_Boehm87',
     'email': 'Napoleon.Kovacek28@gmail.com',
-    'created_at': '2019-03-14T00:00:00Z',
+    'created_date': '2019-03-14T00:00:00Z',
     'reported': 0
   },
   {
@@ -41,7 +41,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Litzy_Erdman68',
     'email': 'Dayton97@yahoo.com',
-    'created_at': '2019-01-12T00:00:00Z',
+    'created_date': '2019-01-12T00:00:00Z',
     'reported': 0
   },
   {
@@ -53,7 +53,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Antonette72',
     'email': 'Nina_Vandervort@yahoo.com',
-    'created_at': '2018-12-30T00:00:00Z',
+    'created_date': '2018-12-30T00:00:00Z',
     'reported': 0
   },
   {
@@ -65,7 +65,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Larissa_Kling18',
     'email': 'Reyes.Russel@gmail.com',
-    'created_at': '2019-02-01T00:00:00Z',
+    'created_date': '2019-02-01T00:00:00Z',
     'reported': 0
   },
   {
@@ -77,7 +77,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Solon.Dare22',
     'email': 'Mack_Dibbert@hotmail.com',
-    'created_at': '2018-11-16T00:00:00Z',
+    'created_date': '2018-11-16T00:00:00Z',
     'reported': 0
   },
   {
@@ -89,7 +89,7 @@ const dummyAnswers = [
     'photos': [ ],
     'name': 'Sammy32',
     'email': 'Moses_Kunze@yahoo.com',
-    'created_at': '2019-06-13T00:00:00Z',
+    'created_date': '2019-06-13T00:00:00Z',
     'reported': 0
   },
   {
@@ -106,7 +106,7 @@ const dummyAnswers = [
     ],
     'name': 'Cheyanne_Grady',
     'email': 'Seller',
-    'created_at': '2019-07-06T00:00:00Z',
+    'created_date': '2019-07-06T00:00:00Z',
     'reported': 0
   }
 ];
@@ -169,7 +169,7 @@ describe('Answer model', () => {
     expect(result.reported).toBe(0);
     expect(result.photos.length).toBe(1);
     expect(result.question_id.toString()).toBe('601087e1d492e8580b3b8519');
-    expect(result.created_at instanceof Date).toBe(true);
+    expect(result.created_date instanceof Date).toBe(true);
   });
 
   test('should fetch answers based on page and count', async () => {
@@ -190,7 +190,7 @@ describe('Answer model', () => {
     let results = await Answer.findByQuestionId('601087e1d492e8580b3b9035');
     expect(results[0].email).toBe('Seller');
     expect(results[1].helpful > results[2].helpful).toBe(true);
-    expect(results[2].created_at > results[3].created_at).toBe(true);
+    expect(results[2].created_date > results[3].created_date).toBe(true);
   });
 
   test('should statically sort results', async () => {
@@ -237,7 +237,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Annetta.Buckridge',
     'email': 'Georgiana.Yost@hotmail.com',
-    'created_at': '2018-09-16T00:00:00Z',
+    'created_date': '2018-09-16T00:00:00Z',
   },
   {
     '_id': '601087e2d492e8580b3c618f',
@@ -247,7 +247,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Jaydon.Keebler',
     'email': 'Raleigh_McClure@gmail.com',
-    'created_at': '2019-04-29T00:00:00Z',
+    'created_date': '2019-04-29T00:00:00Z',
   },
   {
     '_id': '601087e2d492e8580b3c6190',
@@ -257,7 +257,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Kennith.Medhurst',
     'email': 'Eldred.Hills@hotmail.com',
-    'created_at': '2019-07-19T00:00:00Z',
+    'created_date': '2019-07-19T00:00:00Z',
   },
   {
     '_id': '601087e2d492e8580b3c6191',
@@ -267,7 +267,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Test4',
     'email': 'Eldred.Hills@hotmail.com',
-    'created_at': '2020-07-19T00:00:00Z',
+    'created_date': '2020-07-19T00:00:00Z',
   },
   {
     '_id': '601087e2d492e8580b3c6192',
@@ -277,7 +277,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Test5',
     'email': 'Eldred.Hills@hotmail.com',
-    'created_at': '2019-06-19T00:00:00Z',
+    'created_date': '2019-06-19T00:00:00Z',
   },
   {
     '_id': '601087e2d492e8580b3c6193',
@@ -287,7 +287,7 @@ const dummyQuestions = [
     'reported': 0,
     'name': 'Test6',
     'email': 'Eldred.Hills@hotmail.com',
-    'created_at': '2019-07-19T00:00:00Z',
+    'created_date': '2019-07-19T00:00:00Z',
   },
 ];
 
@@ -301,7 +301,7 @@ const dummyQAnswers = [
     'photos': [ ],
     'name': 'Maximilian_Gerlach44',
     'email': 'Manley64@yahoo.com',
-    'created_at': '2019-05-23T00:00:00Z',
+    'created_date': '2019-05-23T00:00:00Z',
     'reported': 0
   },
   {
@@ -313,7 +313,7 @@ const dummyQAnswers = [
     'photos': [ ],
     'name': 'Frederick_Boehm87',
     'email': 'Napoleon.Kovacek28@gmail.com',
-    'created_at': '2019-03-14T00:00:00Z',
+    'created_date': '2019-03-14T00:00:00Z',
     'reported': 0
   },
   {
@@ -325,7 +325,7 @@ const dummyQAnswers = [
     'photos': [ ],
     'name': 'Litzy_Erdman68',
     'email': 'Dayton97@yahoo.com',
-    'created_at': '2019-01-12T00:00:00Z',
+    'created_date': '2019-01-12T00:00:00Z',
     'reported': 0
   },
   {
@@ -337,7 +337,7 @@ const dummyQAnswers = [
     'photos': [ ],
     'name': 'Antonette72',
     'email': 'Nina_Vandervort@yahoo.com',
-    'created_at': '2018-12-30T00:00:00Z',
+    'created_date': '2018-12-30T00:00:00Z',
     'reported': 0
   },
 ];
@@ -388,7 +388,7 @@ describe('Question model', () => {
     expect(result._id.toString().length).toBe(24);
     expect(result.helpful).toBe(0);
     expect(result.reported).toBe(0);
-    expect(result.created_at instanceof Date).toBe(true);
+    expect(result.created_date instanceof Date).toBe(true);
 
   });
 
@@ -415,7 +415,7 @@ describe('Question model', () => {
       if (next) {
         expect(current.helpful >= next.helpful).toBe(true);
         if (current.helpful === next.helpful) {
-          expect(current.created_at >= next.created_at).toBe(true);
+          expect(current.created_date >= next.created_date).toBe(true);
         }
       }
     }

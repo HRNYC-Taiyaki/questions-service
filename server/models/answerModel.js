@@ -25,7 +25,7 @@ const answerSchema = new Schema({
   },
   'name': { type: String, required: true },
   'email': { type: String, required: true },
-  'created_at': { type: Date, default: Date.now, },
+  'created_date': { type: Date, default: Date.now, },
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
 });
 

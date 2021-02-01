@@ -13,7 +13,7 @@ const questionSchema = new Schema({
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
   'name': {type: String, required: true},
   'email': { type: String, required: true },
-  'created_at': { type: Date, default: Date.now, },
+  'created_date': { type: Date, default: Date.now, },
 });
 
 // todo: Add custom statics methods for schema
