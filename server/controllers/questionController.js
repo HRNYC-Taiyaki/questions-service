@@ -35,7 +35,13 @@ module.exports = {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    res.status(204).send();
+    Question.markHelpful(req.params.question_id)
+      .then(results => {
+        res.sendStatus(204);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
   },
   reportQuestion: (req, res) => {
     // Responds with error if any of the route validations fail
@@ -44,6 +50,12 @@ module.exports = {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    res.status(204).send('Question Added');
+    Question.report(req.params.question_id)
+      .then(results => {
+        res.sendStatus(204);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
   },
 };
