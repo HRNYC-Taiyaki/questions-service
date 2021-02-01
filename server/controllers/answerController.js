@@ -23,19 +23,34 @@ module.exports = {
   markAnswerHelpful: (req, res) => {
     // Responds with error if any of the route validations fail
     const errors = validationResult(req);
-    debugger;
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    res.status(204).send('Marked answer helpful');
+
+    Answer.markHelpful(req.params.answer_id)
+      .then(results => {
+        res.sendStatus(204);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
+
+
   },
   reportAnswer: (req, res) => {
     // Responds with error if any of the route validations fail
     const errors = validationResult(req);
-    debugger;
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    res.status(204).send('Reported answer');
+
+    Answer.report(req.params.answer_id)
+      .then(results => {
+        res.sendStatus(204);
+      })
+      .catch( err => {
+        res.sendStatus(500);
+      });
+
   },
 };
