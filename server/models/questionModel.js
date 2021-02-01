@@ -13,7 +13,7 @@ const questionSchema = new Schema({
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
   'name': {type: String, required: true},
   'email': { type: String, required: true },
-  'created_at': { type: Date, default: Date.now, },
+  'created_date': { type: Date, default: Date.now, },
 });
 
 // todo: Add custom statics methods for schema
@@ -57,7 +57,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
             $sort: {
               seller: -1,
               helpful: -1,
-              'created_at': -1,
+              'created_date': -1,
               _id: -1
             }
           },
@@ -67,7 +67,6 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
             }
           }
         ],
-
       }
     },
     {
@@ -100,7 +99,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
     {
       $sort: {
         helpful: -1,
-        'created_at': -1,
+        'created_date': -1,
         _id: -1,
       },
     },
@@ -126,9 +125,7 @@ questionSchema.statics.markHelpful = function (questionId) {
 questionSchema.statics.report = function (questionId) {
   return this.findOneAndUpdate(
     {_id: ObjectId(questionId)},
-    {$bit: {
-      reported: {'xor': 1}
-    }},
+    { reported: 1},
     {new: true}
   ).exec();
 };

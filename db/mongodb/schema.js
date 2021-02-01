@@ -11,11 +11,11 @@ db.createCollection('question', {
         'reported',
       ],
       properties: {
-        product_id: {
+        'product_id': {
           bsonType: 'int',
           description: 'Required. Number to reference associated product'
         },
-        created_date: {
+        'created_date': {
           bsonType: 'date',
           description: 'The date question was submited'
         },
@@ -59,15 +59,15 @@ db.createCollection('answer', {
         'created_date'
       ],
       properties: {
-        product_id: {
+        'product_id': {
           bsonType: 'int',
           description: 'Required. Number to reference associated product'
         },
-        question_id: {
+        'question_id': {
           bsonType: 'objectId',
           description: 'Required. ID to reference associated question'
         },
-        created_date: {
+        'created_date': {
           bsonType: 'date',
           description: 'The date answer was submited'
         },

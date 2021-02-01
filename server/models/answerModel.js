@@ -25,7 +25,7 @@ const answerSchema = new Schema({
   },
   'name': { type: String, required: true },
   'email': { type: String, required: true },
-  'created_at': { type: Date, default: Date.now, },
+  'created_date': { type: Date, default: Date.now, },
   'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
 });
 
@@ -53,7 +53,7 @@ answerSchema.statics.findByQuestionId = function (
       $sort: {
         seller: -1,
         helpful: -1,
-        'created_at': -1,
+        'created_date': -1,
         _id: -1,
       },
     },
@@ -84,9 +84,7 @@ answerSchema.statics.markHelpful = function (answerId) {
 answerSchema.statics.report = function (answerId) {
   return this.findOneAndUpdate(
     {_id: ObjectId(answerId)},
-    {$bit: {
-      reported: {'xor': 1}
-    }},
+    {reported: 1},
     {new: true}
   ).exec();
 };

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const answerSchema = require('../models/answerModel.js');
 const questionSchema = require('../models/questionModel.js');
 
-let CONNECTIONSTRING = process.env.CONNECTIONSTRING || 'mongodb://localhost/test';
+let CONNECTIONSTRING = process.env.CONNECTIONSTRING || 'mongodb://localhost/atelier';
 mongoose.connect(CONNECTIONSTRING, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const conn = mongoose.connection;

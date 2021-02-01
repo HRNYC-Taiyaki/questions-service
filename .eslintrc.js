@@ -10,8 +10,8 @@ module.exports = {
     /* Indentation */
     'no-mixed-spaces-and-tabs': 2,
     indent: ['error', 2, {'ignoreComments': true}],
-    /* Variable cames */
-    camelcase: 2,
+    /* Variable names */
+    // camelcase: 2,
     /* Language constructs */
     curly: 2,
     eqeqeq: [2, 'smart'],
