@@ -9,7 +9,7 @@ services:
       - 9229:9229
     environment:
       - SERVER_PORT=3000
-      - CONNECTIONSTRING=mongodb://mongo:27017/questions
+      - CONNECTIONSTRING=mongodb://mongo:27017/atelier
     volumes:
       - .:/code
     command: npm run debug
