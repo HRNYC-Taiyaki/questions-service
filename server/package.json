@@ -24,9 +24,11 @@
   "author": "Colin Chauche",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.9.2",
-    "mongoose": "^5.11.13"
+    "mongoose": "^5.11.13",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "eslint": "^7.18.0",
