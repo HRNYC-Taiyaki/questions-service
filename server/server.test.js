@@ -2,7 +2,7 @@ const app = require('./server.js');
 const request = require('supertest')(app);
 
 const product_id = 2;
-const question_id = '6010882bd492e8580b71415e';
+const question_id = '601949a78f1fa4f66235bdef';
 
 describe('Server', () => {
   it('should have route to get questions', async () => {
