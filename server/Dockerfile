@@ -1,8 +1,8 @@
 FROM node:14.15.1 as base
 
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 
-WORKDIR /server
+WORKDIR /
 
 COPY ["package.json", "package-lock.json*", "./"]
 
