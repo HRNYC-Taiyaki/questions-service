@@ -19,7 +19,7 @@ const { Answer, Question } = require('./db/mongo.js');
 app.delete('/qa/questions', (req, res) => {
   Question.deleteMany({ product_id: 9999999 })
     .then((result) => {
-      req.status(204).json(result);
+      res.status(204).json(result);
     })
     .catch((err) => {
       res.status(500).send(err.message);
