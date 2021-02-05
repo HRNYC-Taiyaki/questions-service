@@ -20,8 +20,117 @@ const questionSchema = new Schema({
 // todo: Add custom statics methods for schema
 questionSchema.statics.findByProductId = function (productId, page = 1, count = 5) {
   // Check if key is in redis
-    // If it is then return that
-    // Otherwise do the query
+  let cacheKey = JSON.stringify(arguments);
+  debugger;
+  redis.getAsync(cacheKey)
+    .then((results) => {
+      // If query string is in cache then return that
+      if (results) {
+        return JSON.parse(results);
+      } else { // Otherwise do the query
+        let pipeline = [
+          {
+            $match: {
+              'product_id': productId,
+              reported: 0,
+            },
+          },
+          {
+            $lookup: {
+              from: 'answers',
+              as: 'answers',
+              let: {
+                id: '$_id'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: [
+                        '$question_id',
+                        '$$id'
+                      ]
+                    }
+                  }
+                },
+                {
+                  $set: {
+                    seller: {
+                      $eq: [
+                        '$email',
+                        'Seller'
+                      ]
+                    }
+                  }
+                },
+                {
+                  $sort: {
+                    seller: -1,
+                    helpful: -1,
+                    'created_date': -1,
+                    _id: -1
+                  }
+                },
+                {
+                  $project: {
+                    seller: 0
+                  }
+                }
+              ],
+            }
+          },
+          {
+            $set: {
+              'answers': {
+                $reduce: {
+                  input: '$answers',
+                  initialValue: {},
+                  in: {
+                    $mergeObjects: [
+                      '$$value',
+                      {
+                        $arrayToObject: [
+                          [
+                            {
+                              k: {
+                                $toString: '$$this._id'
+                              },
+                              v: '$$this'
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            $sort: {
+              helpful: -1,
+              'created_date': -1,
+              _id: -1,
+            },
+          },
+          {
+            $skip: (page - 1) * count,
+          },
+          {
+            $limit: count,
+          },
+        ];
+        return this.aggregate(pipeline)
+          .then((results) => {
+          // If query is successful save to cache
+            redis.setAsync(cacheKey, JSON.stringify(results));
+            return results;
+          });
+      }
+    });
+
+
+
   let pipeline = [
     {
       $match: {
