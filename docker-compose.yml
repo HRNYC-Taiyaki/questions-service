@@ -16,9 +16,10 @@ services:
 
   redis:
     image: redis
+    container_name: cache
     expose:
       - 6379
-    volumes:
-      - ~/questions-service/server:/usr/local/etc/redis
-    command: redis-server /usr/local/etc/redis/redis.conf
+    # volumes:
+    #   - ~/questions-service/server:/usr/local/etc/redis
+    # command: redis-server /usr/local/etc/redis/redis.conf
 
