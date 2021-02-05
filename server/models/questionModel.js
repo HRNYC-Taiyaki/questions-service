@@ -17,11 +17,9 @@ const questionSchema = new Schema({
   'created_date': { type: Date, default: Date.now, },
 });
 
-// todo: Add custom statics methods for schema
 questionSchema.statics.findByProductId = function (productId, page = 1, count = 5) {
   // Check if key is in redis
   let cacheKey = JSON.stringify(arguments);
-  debugger;
   redis.getAsync(cacheKey)
     .then((results) => {
       // If query string is in cache then return that
