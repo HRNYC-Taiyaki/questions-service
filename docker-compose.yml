@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./server
+    ports:
+      - 80:3000
+    environment:
+      - SERVER_PORT=3000
+      - CONNECTIONSTRING=mongodb://18.220.146.67:27017/atelier
+      - REDIS_URL=redis://cache
+    volumes:
+      - .:/code
+    # command: npm run debug
+
+  redis:
+    image: redis
+    expose:
+      - 6379
+    volumes:
+      - ~/questions-service/server:/usr/local/etc/redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+

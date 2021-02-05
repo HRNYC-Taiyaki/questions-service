@@ -1,6 +1,6 @@
 const { createClient } = require('redis');
 const { promisify } = require('util');
-const redis = createClient(6379, 'localhost'); // todo: env variable?
+const redis = process.env.REDIS_URL ? createClient(process.env.REDIS_URL) : createClient(6379, 'localhost');
 
 redis.on('error', function(error) {
   console.error(error);
