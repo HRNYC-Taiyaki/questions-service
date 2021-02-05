@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { Schema } = mongoose;
+const redis = require('../db/redis.js');
 
 const boolVal = (val) => {
   return val === 0 || val === 1;
@@ -18,6 +19,9 @@ const questionSchema = new Schema({
 
 // todo: Add custom statics methods for schema
 questionSchema.statics.findByProductId = function (productId, page = 1, count = 5) {
+  // Check if key is in redis
+    // If it is then return that
+    // Otherwise do the query
   let pipeline = [
     {
       $match: {
