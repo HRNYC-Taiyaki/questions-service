@@ -50,7 +50,11 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
                   '$email',
                   'Seller'
                 ]
-              }
+              },
+              id: '$_id',
+              date: '$created_date',
+              answerer_name: '$name',
+              helpfulness: '$helpful',
             }
           },
           {
@@ -61,6 +65,17 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
               _id: -1
             }
           },
+          {
+            $project: {
+              _id: 0,
+              id: 1,
+              body: 1,
+              date: 1,
+              answerer_name: 1,
+              helpfulness: 1,
+              photos: 1,
+            }
+          }
         ],
       }
     },
@@ -78,7 +93,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
                     [
                       {
                         k: {
-                          $toString: '$$this._id'
+                          $toString: '$$this.id'
                         },
                         v: '$$this'
                       }
@@ -115,7 +130,6 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
     },
     {
       $project: {
-        seller: 0,
         _id: 0,
         body: 0,
         created_date: 0,
