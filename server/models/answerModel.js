@@ -32,8 +32,8 @@ const answerSchema = new Schema({
 // Return a promise that resolves to an array
 answerSchema.statics.findByQuestionId = function (
   questionId,
-  page,
-  count
+  page = 1,
+  count = 5
 ) {
   let pipeline = [
     {
