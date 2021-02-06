@@ -1,3 +1,5 @@
+# This file is only somewhat implemented.
+# I want to keep it here just for reference later but its not used ATM
 version: "3.8"
 
 services:
