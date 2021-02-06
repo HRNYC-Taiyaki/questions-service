@@ -10,14 +10,18 @@ module.exports = {
     }
 
     let {question_id, page = 1, count = 5} = req.params;
-    console.table(req);
 
     Answer.findByQuestionId(question_id, page, count)
-    // Answer.findByQuestionId(req.params.question_id, req.query.page, req.query.count)
       .then(results => {
         // Reformat results
+        let resBody = {
+          question: question_id,
+          page: page - 1,
+          count,
+          results
+        };
 
-        res.status(200).json(results);
+        res.status(200).json(resBody);
       })
       .catch(err => {
         console.error(err);
