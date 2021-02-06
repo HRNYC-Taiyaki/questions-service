@@ -9,9 +9,15 @@ module.exports = {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    Question.findByProductId(req.query.product_id, req.query.page, req.query.count)
-      .then(result => {
-        res.status(200).json(result);
+    let {product_id, page, count} = req.query;
+
+    Question.findByProductId(product_id, page, count)
+      .then(results => {
+        let resBody = {
+          product_id,
+          results,
+        };
+        res.status(200).json(resBody);
       })
       .catch(err => {
         console.error(err);
