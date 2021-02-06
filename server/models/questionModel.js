@@ -61,11 +61,6 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
               _id: -1
             }
           },
-          {
-            $project: {
-              seller: 0
-            }
-          }
         ],
       }
     },
@@ -108,6 +103,27 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
     },
     {
       $limit: count,
+    },
+    {
+      $set: {
+        'question_id': '$_id',
+        'question_body': '$body',
+        'question_date': '$created_date',
+        'asker_name': '$name',
+        'question_helpfulness': '$helpful'
+      }
+    },
+    {
+      $project: {
+        seller: 0,
+        _id: 0,
+        body: 0,
+        created_date: 0,
+        name: 0,
+        helpful: 0,
+        product_id: 0,
+        email: 0,
+      }
     },
   ];
   return this.aggregate(pipeline);
