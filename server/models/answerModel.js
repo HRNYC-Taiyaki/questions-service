@@ -32,8 +32,8 @@ const answerSchema = new Schema({
 // Return a promise that resolves to an array
 answerSchema.statics.findByQuestionId = function (
   questionId,
-  page = 1,
-  count = 5
+  page,
+  count
 ) {
   let pipeline = [
     {
@@ -58,15 +58,37 @@ answerSchema.statics.findByQuestionId = function (
       },
     },
     {
-      $project: {
-        seller: 0,
-      },
-    },
-    {
       $skip: (page - 1) * count,
     },
     {
       $limit: count,
+    },
+    {
+      $set: {
+        answer_id: {
+          '$toString': '$_id'
+        },
+        answerer_name: '$name',
+        date: {
+          '$toString': '$created_date'
+        },
+        helpfulness: '$helpful',
+
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        name: 0,
+        created_date: 0,
+        seller: 0,
+        reported: 0,
+        question_id: 0,
+        email: 0,
+        product_id: 0,
+        helpful: 0
+      },
+
     },
   ];
   return this.aggregate(pipeline);

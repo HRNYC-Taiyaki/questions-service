@@ -9,9 +9,19 @@ module.exports = {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    Answer.findByQuestionId(req.params.question_id, req.query.page, req.query.count)
-      .then(result => {
-        res.status(200).json(result);
+    let {question_id, page = 1, count = 5} = req.params;
+
+    Answer.findByQuestionId(question_id, page, count)
+      .then(results => {
+        // Reformat results
+        let resBody = {
+          question: question_id,
+          page: page - 1,
+          count,
+          results
+        };
+
+        res.status(200).json(resBody);
       })
       .catch(err => {
         console.error(err);
