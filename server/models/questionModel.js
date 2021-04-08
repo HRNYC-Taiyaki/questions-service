@@ -1,27 +1,32 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { Schema } = mongoose;
-
-const boolVal = (val) => {
-  return val === 0 || val === 1;
-};
+const { boolVal } = require('./schemaValidation.js');
 
 const questionSchema = new Schema({
-  'product_id': {type: Number, required: true, index: true},
-  'body': {type: String, required: true},
-  'helpful': { type: Number, default: 0 },
-  'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
-  'name': {type: String, required: true},
-  'email': { type: String, required: true },
-  'created_date': { type: Date, default: Date.now, },
+  product_id: { type: Number, required: true, index: true },
+  body: { type: String, required: true },
+  helpful: { type: Number, default: 0 },
+  reported: {
+    type: Number,
+    default: 0,
+    validate: [boolVal, 'reported can only be 0 or 1'],
+  },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  created_date: { type: Date, default: Date.now },
 });
 
 // todo: Add custom statics methods for schema
-questionSchema.statics.findByProductId = function (productId, page = 1, count = 5) {
+questionSchema.statics.findByProductId = function (
+  productId,
+  page = 1,
+  count = 5
+) {
   let pipeline = [
     {
       $match: {
-        'product_id': productId,
+        product_id: productId,
         reported: 0,
       },
     },
@@ -30,40 +35,34 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
         from: 'answers',
         as: 'answers',
         let: {
-          id: '$_id'
+          id: '$_id',
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $eq: [
-                  '$question_id',
-                  '$$id'
-                ]
-              }
-            }
+                $eq: ['$question_id', '$$id'],
+              },
+            },
           },
           {
             $set: {
               seller: {
-                $eq: [
-                  '$email',
-                  'Seller'
-                ]
+                $eq: ['$email', 'Seller'],
               },
               id: '$_id',
               date: '$created_date',
               answerer_name: '$name',
               helpfulness: '$helpful',
-            }
+            },
           },
           {
             $sort: {
               seller: -1,
               helpful: -1,
-              'created_date': -1,
-              _id: -1
-            }
+              created_date: -1,
+              _id: -1,
+            },
           },
           {
             $project: {
@@ -74,14 +73,14 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
               answerer_name: 1,
               helpfulness: 1,
               photos: 1,
-            }
-          }
+            },
+          },
         ],
-      }
+      },
     },
     {
       $set: {
-        'answers': {
+        answers: {
           $reduce: {
             input: '$answers',
             initialValue: {},
@@ -93,23 +92,23 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
                     [
                       {
                         k: {
-                          $toString: '$$this.id'
+                          $toString: '$$this.id',
                         },
-                        v: '$$this'
-                      }
-                    ]
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      }
+                        v: '$$this',
+                      },
+                    ],
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      },
     },
     {
       $sort: {
         helpful: -1,
-        'created_date': -1,
+        created_date: -1,
         _id: -1,
       },
     },
@@ -121,12 +120,12 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
     },
     {
       $set: {
-        'question_id': '$_id',
-        'question_body': '$body',
-        'question_date': '$created_date',
-        'asker_name': '$name',
-        'question_helpfulness': '$helpful'
-      }
+        question_id: '$_id',
+        question_body: '$body',
+        question_date: '$created_date',
+        asker_name: '$name',
+        question_helpfulness: '$helpful',
+      },
     },
     {
       $project: {
@@ -137,7 +136,7 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
         helpful: 0,
         product_id: 0,
         email: 0,
-      }
+      },
     },
   ];
   return this.aggregate(pipeline);
@@ -145,20 +144,18 @@ questionSchema.statics.findByProductId = function (productId, page = 1, count = 
 
 questionSchema.statics.markHelpful = function (questionId) {
   return this.findOneAndUpdate(
-    {_id: ObjectId(questionId)},
-    {'$inc': {helpful: 1}},
-    {new: true}
-  )
-    .exec();
+    { _id: ObjectId(questionId) },
+    { $inc: { helpful: 1 } },
+    { new: true }
+  ).exec();
 };
 
 questionSchema.statics.report = function (questionId) {
   return this.findOneAndUpdate(
-    {_id: ObjectId(questionId)},
-    { reported: 1},
-    {new: true}
+    { _id: ObjectId(questionId) },
+    { reported: 1 },
+    { new: true }
   ).exec();
 };
-
 
 module.exports = questionSchema;
