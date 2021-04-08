@@ -1,14 +1,18 @@
 const express = require('express');
 const router = require('./routes');
 const cors = require('cors');
-const morgan = require('morgan');
 const path = require('path');
 
 const app = express();
 
+
 app.use(express.json());
 app.use(cors());
-app.use(morgan('dev'));
+
+if (process.env.NODE_ENV !== 'production') {
+  const morgan = require('morgan');
+  app.use(morgan('dev'));
+}
 
 // ************************
 // ** For Stress Testing
