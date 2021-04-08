@@ -1,32 +1,25 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { Schema } = mongoose;
-
-const photoSchema = new Schema({
-  url: { type: String, required: true },
-});
-
-const photoLimit = (photos) => {
-  photos.length <= 5;
-};
-
-const boolVal = (val) => {
-  return val === 0 || val === 1;
-};
+const { photoSchema, photoLimit, boolVal } = require('./schemaValidation.js');
 
 const answerSchema = new Schema({
-  'question_id': { type: mongoose.ObjectId, required: true, index: true },
-  'body': { type: String, required: true },
-  'helpful': { type: Number, default: 0 },
-  'product_id': { type: Number, index: true },
-  'photos': {
+  question_id: { type: mongoose.ObjectId, required: true, index: true },
+  body: { type: String, required: true },
+  helpful: { type: Number, default: 0 },
+  product_id: { type: Number, index: true },
+  photos: {
     type: [photoSchema],
     validate: [photoLimit, 'photos exceeds the limit of 5'],
   },
-  'name': { type: String, required: true },
-  'email': { type: String, required: true },
-  'created_date': { type: Date, default: Date.now, },
-  'reported': { type: Number, default: 0, validate: [boolVal, 'reported can only be 0 or 1']},
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  created_date: { type: Date, default: Date.now },
+  reported: {
+    type: Number,
+    default: 0,
+    validate: [boolVal, 'reported can only be 0 or 1'],
+  },
 });
 
 // Return a promise that resolves to an array
@@ -38,7 +31,7 @@ answerSchema.statics.findByQuestionId = function (
   let pipeline = [
     {
       $match: {
-        'question_id': ObjectId(questionId),
+        question_id: ObjectId(questionId),
         reported: 0,
       },
     },
@@ -53,7 +46,7 @@ answerSchema.statics.findByQuestionId = function (
       $sort: {
         seller: -1,
         helpful: -1,
-        'created_date': -1,
+        created_date: -1,
         _id: -1,
       },
     },
@@ -66,15 +59,14 @@ answerSchema.statics.findByQuestionId = function (
     {
       $set: {
         answer_id: {
-          '$toString': '$_id'
+          $toString: '$_id',
         },
         answerer_name: '$name',
         date: {
-          '$toString': '$created_date'
+          $toString: '$created_date',
         },
         helpfulness: '$helpful',
-
-      }
+      },
     },
     {
       $project: {
@@ -86,9 +78,8 @@ answerSchema.statics.findByQuestionId = function (
         question_id: 0,
         email: 0,
         product_id: 0,
-        helpful: 0
+        helpful: 0,
       },
-
     },
   ];
   return this.aggregate(pipeline);
@@ -96,18 +87,17 @@ answerSchema.statics.findByQuestionId = function (
 
 answerSchema.statics.markHelpful = function (answerId) {
   return this.findOneAndUpdate(
-    {_id: ObjectId(answerId)},
-    {'$inc': {helpful: 1}},
-    {new: true}
-  )
-    .exec();
+    { _id: ObjectId(answerId) },
+    { $inc: { helpful: 1 } },
+    { new: true }
+  ).exec();
 };
 
 answerSchema.statics.report = function (answerId) {
   return this.findOneAndUpdate(
-    {_id: ObjectId(answerId)},
-    {reported: 1},
-    {new: true}
+    { _id: ObjectId(answerId) },
+    { reported: 1 },
+    { new: true }
   ).exec();
 };
 
