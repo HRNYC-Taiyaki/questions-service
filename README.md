@@ -77,6 +77,15 @@ Ensure the following modules are installed before running `npm install`
 3. The api will now be accessible on http://localhost:3000
 
 ## System Architecture
+### Initial System Architecture  
+![Initial System Architecture](/readmeFiles/initial-architecture.png)
+> My initial deployment used two AWS EC2 t2.micros one for the Node server and one for the MongoDB database. This configuration was able to consistently respond to 330 clients per second with 100% throughput and average response times below 35ms
+
+### Final System Architecture
+To improve performance I decided to scale the service horizontally. I did this by adding 2 more instances of the Node server and adding NGINX for load balancing.  
+
+![Final System Architecture](/readmeFiles/final-architecture.png)
+> This arrangement was able to handle 850 clients per second with 100% throughput keeping average response times below 30ms. 
 
 ## Load Testing
 
