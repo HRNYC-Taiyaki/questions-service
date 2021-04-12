@@ -167,8 +167,8 @@ Response
 
 Parameters
 
-| Parameters  | Type    | In    | Description                                                |
-| ----------- | ------- | ----- | ---------------------------------------------------------- |
+| Parameters  | Type    | In    | Description |
+| ----------- | ------- | ----- | ----------- |
 | question_id | string  | path  | Required UUID of the question for which answers are needed |
 | page        | integer | query | Selects the page of results to return. Default 1.          |
 | count       | integer | query | Specifies how many results per page to return. Default 5.  |
@@ -217,102 +217,91 @@ Response
 
 ### Add A Question
 
-`GET /endpoint` Description
+`POST /qa/questions` Adds a question for the given product
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| body | string | body | Text of question being asked |
+| name | string | body | Username for question asker |
+| email | string | body | Email address for question asker |
+| product _id | integer | body | Required ID of the product for which the question is posted |
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 201 Created`
 
 ### Add An Answer
 
-`GET /endpoint` Description
+`POST /qa/questions/:question_id/answers` Adds an answer for the given question
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| question_id | string | path | Required UUID of the question to post the answer for |
+| body | string | body | Test of question being asked |
+| name | string | body | Username for question asker |
+| email | string | body | Email address for question asker |
+| photos | [string] | body | An array of urls corresponding to images to display | 
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 201 CREATED`
 
 ### Mark Question As Helpful
 
-`GET /endpoint` Description
+`PUT /qa/questions/:question_id/helpful` Updates a question to show it was found helpful.
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| question_id | string | path | Required UUID of the question to update |
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 204 NO CONTENT`
 
 ### Report Question
 
-`GET /endpoint` Description
+`PUT /qa/questions/:question_id/report` Updates a question to show it was reported. Note, this action does not delete the question, but the question will not be returned in the above GET request.
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| question_id | string | path | Required UUID of the question to update |
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 204 NO CONTENT`
 
 ### Mark Answer As Helpful
 
-`GET /endpoint` Description
+`PUT /qa/answers/:answer_id/helpful` Updates an answer to show it was found helpful.
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| answer_id | string | path | Required UUID of teh answer to update |
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 204 NO CONTENT`
 
 ### Report Answer
 
-`GET /endpoint` Description
+`PUT /qa/answers/:answer_id/report` Updates an answer to show it has been reported. Note, this action does not delete the answer, but the answer will not be returned in the above GET request.
 
 Parameters
 
 | Parameters | Type | In  | Description |
 | ---------- | ---- | --- | ----------- |
-|            |      |     |             |
+| answer_id | string | path | Required UUID of teh answer to update |
 
 Response
-`Status: `
 
-```JSON
-
-```
+`Status: 204 NO CONTENT`
