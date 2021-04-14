@@ -30,7 +30,7 @@ Ensure the following modules are installed before running `npm install`
 
 - Node v14.15.0 or higher
 - mongoDB v4.4.1 or higher
-  > Alternatively project can be run using Docker
+> Alternatively project can be run using Docker
 
 ## Technologies Used
 
@@ -49,9 +49,10 @@ Ensure the following modules are installed before running `npm install`
 
 ## Installation
 
+### Running Locally
 1. Start an instance of mongoDB
    - If you have mongoDB installed locally you shouldn't need to do anything. If you get a connection error make sure mongo is running.
-   - USING DOCKER
+   - Using Docker
      ```
      docker run -d -p 27017:27017 mongo
      ```
@@ -62,19 +63,21 @@ Ensure the following modules are installed before running `npm install`
    npm start
    ```
 
-   - USING DOCKER
-     - From the `server/` directory run:
-       ```
-       docker build -t qna_api .
-       ```
-     - After the image is built use the command:
-       ```
-       docker run -d -p 3000:3000 -e "CONNECTIONSTRING=mongodb://localhost:27017/atelier" qna_api
-       ```
-     - This will build a container that will run the server on port 3000.
-       > If mongo is not running at `localhost:27017` then change the value of the "CONNECTIONSTRING" environment variable to connect to the appropriate location
-
 3. The api will now be accessible on http://localhost:3000
+
+### Using Docker
+  1. From the `server/` directory run:
+      ```
+      docker build -t qna_api .
+      ```
+  2. After the image is built use the command:
+      ```
+      docker run -d -p 3000:3000 -e "CONNECTIONSTRING=mongodb://localhost:27017/atelier" qna_api
+      ```
+  3. This will build a container that will run the server on port 3000.
+      > If mongo is not running at `localhost:27017` then change the value of the "CONNECTIONSTRING" environment variable to connect to the appropriate location
+
+  4. The api will now be accessible on http://localhost:3000
 
 ## System Architecture
 ### Initial System Architecture  
@@ -88,6 +91,25 @@ To improve performance I decided to scale the service horizontally. I did this b
 > This arrangement was able to handle 850 clients per second with 100% throughput keeping average response times below 30ms. 
 
 ## Load Testing
+_A more detailed journal of load testing can be found here: [Load Testing Q&A API](https://www.notion.so/Stress-Testing-Q-A-API-e73c17ac285d40279c54c19c628d2e8d)_
+### Load Test - One API Instance
+Using a single instance of the API server I managed to sometimes get 100% throughput on 10,000 clients over 30 seconds keeping the average and max response times in an acceptable range.
+
+![Load Test 1 API 10,000 clients over 30 seconds](/readmeFiles/load-test-01.png)
+
+Once the test was ramped up to 10,000 clients over 20 seconds the single server was unable to keep up and throughput fell dramatically. 
+
+![Load Test 1 API 10,000 clients over 20 seconds](/readmeFiles/load-test-02.png)
+
+### Load Test - Three API Instances With Round Robin Load Balancing
+The first configuration of NGINX I used managed to consistently get 100% throughput up to around 650 clients per second. 
+
+![Load Test 3 API Round Robin 10,000 clients over 20 seconds](/readmeFiles/load-test-03.png)
+### Load Test - Three API Instances With Least Connections Load Balancing
+I realized with only 3 instances I would likely be able to get some more performance out of the system if the load balancing method was changed to least connections.  With this configuration the service managed consistent 100% throughput at 850 clients per second.
+
+![Load Test 3 API Least Connections 850 Clients per Second](/readmeFiles/load-test-04.png)
+
 
 ## API Routes
 
