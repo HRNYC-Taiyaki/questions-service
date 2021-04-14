@@ -5,7 +5,7 @@
 <div style="text-align: center">
 <img src="./readmeFiles/techStack.png" alt="Tech Stack: Node.js, Express, MongoDB, Docker, NGINX" height="75">
 </div>
-<!-- !["Tech Stack: Node.js, Express, MongoDB, Docker, NGINX"](./readmeFiles/techStack.png) -->
+
 For this project I was given a set of CSV files containing millions of records for the 'Questions and Answers' section of an e-commerce website.  The goal was to produce a scalable API that had to serve pre-existing legacy front end code with 8 different endpoints. The minimum requirements where to serve 200 clients per second with <50ms average response times, though after initial deployment and load testing I was able to achieve 850 clients per second by horizontally scaling my service. This was all deployed using only AWS EC2 t2.micros.
 
 The data I was provided with were three CSV files, each containing millions of records, for the questions, answers and answer photos. Because of how the data is nested I decided that using mongoDB with it's flexible document structure would allow me to best optimize for user queries. I implemented the server using node.js and express and used Docker for easy deployment. Lastly when it came to scaling horizontally I implemented a load balancer using NGINX
@@ -17,6 +17,8 @@ The data I was provided with were three CSV files, each containing millions of r
 [Technologies Used](#technologies-used)
 
 [Installation](#installation)
+
+[ETL Process](#etl-process)
 
 [System Architecture](#system-architecture)
 
@@ -38,6 +40,7 @@ Ensure the following modules are installed before running `npm install`
 
 - Node.js
 - Express
+- Mongoose ODM
 - mongoDB
 - Docker
 - NGINX
@@ -78,6 +81,51 @@ Ensure the following modules are installed before running `npm install`
       > If mongo is not running at `localhost:27017` then change the value of the "CONNECTIONSTRING" environment variable to connect to the appropriate location
 
   4. The api will now be accessible on http://localhost:3000
+
+## ETL Process
+The first step of the project was to design a schema and pick a database based on the data we received in CSV format. For the Questions and Answers section I was given three CSV files:
+```
+questions.csv
+├── id 
+├── product_id
+├── body
+├── date_written
+├── asker_name
+├── asker_email
+├── reported
+└── helpful
+
+answers.csv
+├── id 
+├── question_id 
+├── body
+├── date_written
+├── answerer_name
+├── answerer_email
+├── reported
+└── helpful
+
+answers_photos.csv
+├── id 
+├── answer_id
+└── url
+```
+
+I decided to use mongoDB because I felt the data lent itself to being embedded and mongo's flexible nature would allow me to structure data to optimize for user queries. In the end I settled on on a schema with two collections, one for the answers and one for the questions.  I would embed the answer photos in to the documents in the answers collection.
+
+![Schema Diagram](/readmefiles/schema-diagram.png)
+
+To perform the required data transformations I leveraged mongoDB's powerful aggregation pipelines.
+- Example of transformation for questions data [HERE](https://mongoplayground.net/p/QXdxFylWC_u)
+- Example of transformation for answers data [HERE](https://mongoplayground.net/p/maffdpCUQAB)
+
+### Key Decisions in ETL
+- Keeping the answers data as a separate collection and adding the product_id foreign key to the answers.
+  - In discussions with product stake-holders they specified that each question could potentially have thousands of answers. Combined with the requirement of making the answer text searchable I decided that it was best to keep the answers collection separate from the questions. I also added the related product id to each answer so that I could create an index and easily search the text of all the products answers.
+- Converting from auto-incremented numeric ids to mongo's UUID
+  - During development it became clear that trying to use numeric incrementing id numbers with mongo would force me to create my own numbering system that would impact query performance. Using mongo's build in UUID system meant that I wouldn't have to worry about generating unique ids.
+- Embedding photos in to their corresponding photos
+  - Because each answer has a maximum of 5 photos attached it was a perfect contender for embedding. Being able to embed the photos made returning answer data simpler and more importantly for the user faster.
 
 ## System Architecture
 ### Initial System Architecture  
