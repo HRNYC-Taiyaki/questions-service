@@ -113,7 +113,7 @@ answers_photos.csv
 
 I decided to use mongoDB because I felt the data lent itself to being embedded and mongo's flexible nature would allow me to structure data to optimize for user queries. In the end I settled on on a schema with two collections, one for the answers and one for the questions.  I would embed the answer photos in to the documents in the answers collection.
 
-![Schema Diagram](/readmefiles/schema-diagram.png)
+![Schema Diagram](/readmeFiles/schema-diagram.png)
 
 To perform the required data transformations I leveraged mongoDB's powerful aggregation pipelines.
 - Example of transformation for questions data [HERE](https://mongoplayground.net/p/QXdxFylWC_u)
